@@ -2,23 +2,18 @@
 import { useState } from 'react';
 import { Upload, Image, X, Download, Loader2 } from 'lucide-react';
 import Head from 'next/head';
-import Layout from './layout';
 
 export default function RemoveBackground() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [fileName, setFileName] = useState('');
-  const [originalFile, setOriginalFile] = useState<File | null>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setFileName(file.name);
-      setOriginalFile(file); // Store the actual file for upload
       setProcessedImage(null);
-      
-      // Create preview of original image
       const reader = new FileReader();
       reader.onload = (e) => {
         setOriginalImage(e.target?.result as string);
@@ -28,27 +23,27 @@ export default function RemoveBackground() {
   };
 
   const removeBackground = async () => {
-    if (!originalFile) return;
+    if (!originalImage) return;
     
     setIsLoading(true);
     try {
-      // Create FormData object and append the file
-      const formData = new FormData();
-      formData.append('file', originalFile);
+      // Extract the base64 data from the data URL
+      const base64Data = originalImage.split(',')[1];
       
       const response = await fetch('http://127.0.0.1:8000/remove-bg', {
         method: 'POST',
-        body: formData, // Send as FormData with multipart/form-data encoding
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: base64Data }),
       });
       
       if (!response.ok) {
         throw new Error('Failed to process image');
       }
       
-      // The response is a blob (file) from your FastAPI endpoint
-      const blob = await response.blob();
-      const imageUrl = URL.createObjectURL(blob);
-      setProcessedImage(imageUrl);
+      const data = await response.json();
+      setProcessedImage(`data:image/png;base64,${data.image}`);
     } catch (error) {
       console.error('Error removing background:', error);
       alert('Failed to process image. Please try again.');
@@ -72,12 +67,6 @@ export default function RemoveBackground() {
     setOriginalImage(null);
     setProcessedImage(null);
     setFileName('');
-    setOriginalFile(null);
-    
-    // Revoke any object URLs to prevent memory leaks
-    if (processedImage && processedImage.startsWith('blob:')) {
-      URL.revokeObjectURL(processedImage);
-    }
   };
 
   return (
@@ -153,7 +142,7 @@ export default function RemoveBackground() {
                   <div className="bg-gray-100 p-3 border-b">
                     <h3 className="font-medium">Result Image</h3>
                   </div>
-                  <div className="p-4 flex justify-center items-center checkerboard-bg h-80">
+                  <div className="p-4 flex justify-center items-center bg-gray-50 h-80">
                     {isLoading ? (
                       <div className="text-center">
                         <Loader2 className="h-10 w-10 animate-spin text-blue-600 mx-auto mb-4" />

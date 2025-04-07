@@ -18,7 +18,7 @@ app = FastAPI(title="Background Remover API", version="1.0")
 # CORS for frontend integration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # TODO: Replace * with frontend domain in production
+    allow_origins=["http://localhost:3000/upload","http://localhost:3000/","http://localhost:3000"],  # TODO: Replace * with frontend domain in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
