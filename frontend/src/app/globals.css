@@ -3,12 +3,13 @@
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 249, 250, 251;
+  --font-prompt: 'Prompt', sans-serif;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-prompt);
 }
 
 /* Checkerboard background for transparent images */
@@ -73,3 +74,56 @@ button:active {
   transform: translateY(0);
   box-shadow: none;
 }
+
+
+/* === Custom Left Collage Styling === */
+
+.left-collage {
+  width: 24vw;
+  background-color: #7790ED;
+  position: relative;
+  overflow: visible;
+}
+
+.left-collage .hearts {
+  position: absolute;
+  top: 4rem;
+  left: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+
+
+.left-collage .circle-img {
+  position: absolute;
+  bottom: 10%;
+}
+
+.left-collage .girl-img {
+  position: absolute;
+  bottom: 20%;
+  left:10%;
+}
+
+.left-collage .mom-child {
+  position: absolute;
+  bottom: 5%;
+  left: -10%;
+}
+
+.left-collage .dog-img {
+  position: absolute;
+  right: -15rem;
+  bottom: 1rem;
+  z-index: 30;
+}
+
+.left-collage .star-deco {
+  position: absolute;
+  right: 3rem;
+  top: 66%;
+}
+
+
