@@ -18,7 +18,7 @@ app = FastAPI(title="Background Remover API", version="1.0")
 # CORS for frontend integration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000/upload","http://localhost:3000/","http://localhost:3000"],  # TODO: Replace * with frontend domain in production
+    allow_origins=["http://localhost:3000/upload","http://localhost:3000/","http://localhost:3000","*"],  # TODO: Replace * with frontend domain in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -70,3 +70,10 @@ async def remove_background(file: UploadFile = File(...)):
     except Exception as e:
         logging.exception("Unexpected error occurred during background removal.")
         raise HTTPException(status_code=500, detail="Internal server error.")
+
+
+if __name__ == "__main__":
+    import uvicorn
+    import os
+    port = int(os.environ.get("PORT", 8000))  # Render provides PORT env
+    uvicorn.run(app, host="0.0.0.0", port=port)

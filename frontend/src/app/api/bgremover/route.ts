@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     backendFormData.append('file', file);
 
     // Forward the request to the FastAPI backend
-    const response = await fetch('http://127.0.0.1:8000/remove-bg', {
+    const response = await fetch('http://0.0.0.0:8000/remove-bg', {
       method: 'POST',
       body: backendFormData,
     });
